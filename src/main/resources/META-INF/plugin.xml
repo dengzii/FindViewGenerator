@@ -1,0 +1,19 @@
+<idea-plugin>
+    <id>com.dengzii.plugin.findview</id>
+    <name>GenerateFindView</name>
+    <version>1.0</version>
+    <vendor email="denua@foxmail.com" url="http://dengzii.com">dengzi</vendor>
+    <description>auto generate find view by id in android.</description>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <actions>
+
+        <action id="Generate FindView Action" class="GenerateFindViewAction" text="GenerateFindViewAction"
+                description="GenerateFindViewAction" keymap="$default">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+            <keyboard-shortcut first-keystroke="Alt G" keymap="$default"/>
+        </action>
+    </actions>
+</idea-plugin>

@@ -14,6 +14,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <themeProvider id="95332dbd-a956-4088-85e1-4687887de2c5" path="/com/dengzii/findview/jh.theme.json"/>
     </extensions>
 
     <actions>
