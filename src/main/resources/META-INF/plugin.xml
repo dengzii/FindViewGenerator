@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>com.dengzii.plugin.findview</id>
+    <id>com.dengzii.plugin.idea.findview</id>
     <name>GenerateFindView</name>
     <version>1.0</version>
     <vendor email="denua@foxmail.com" url="http://dengzii.com">dengzi</vendor>
@@ -10,10 +10,12 @@
 
     <actions>
 
-        <action id="Generate FindView Action" class="GenerateFindViewAction" text="GenerateFindViewAction"
-                description="GenerateFindViewAction" keymap="$default">
+        <action id="Generate FindView Action" class="GenerateFindViewAction"
+                text="Generate FindViewById"
+                description="Generate findViewById action" keymap="$default">
+
             <add-to-group group-id="ToolsMenu" anchor="first"/>
-            <keyboard-shortcut first-keystroke="Alt G" keymap="$default"/>
+            <keyboard-shortcut first-keystroke="alt G" keymap="$default"/>
         </action>
     </actions>
 </idea-plugin>
