@@ -21,7 +21,5 @@ intellij {
     version '2019.2.2'
 }
 patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+    changeNotes """ """
 }

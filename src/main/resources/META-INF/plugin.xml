@@ -15,7 +15,7 @@
 
     <actions>
 
-        <action id="Generate FindView Action" class="com.dengzii.plugin.findview.MainAction"
+        <action id="com.dengzii.plugin.findview.main" class="com.dengzii.plugin.findview.MainAction"
                 text="Generate FindViewById"
                 description="Generate findViewById action" keymap="$default">
 
