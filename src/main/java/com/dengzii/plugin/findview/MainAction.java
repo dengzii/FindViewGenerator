@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.project.Project;
-//import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SyntheticElement;
@@ -23,7 +23,7 @@ public class MainAction extends AnAction {
 
     private static final String TAG = "MainAction";
 
-//    private PsiClass mClass;
+    private PsiClass mClass;
     private Project mProject;
     private PsiFile mPsiFile;
 
