@@ -42,12 +42,12 @@ public class MainAction extends AnAction {
 
         this.mProject = e.getProject();
         this.mPsiFile = PsiUtilBase.getPsiFileInEditor(editor, mProject);
-//        this.mClass = getTargetClass(editor, mPsiFile);
+        this.mClass = getTargetClass(editor, mPsiFile);
 
         Document document = editor.getDocument();
-//        XLog.info(TAG, "className: " + mClass.getName());
-//        XLog.info(TAG, "superClass: " + Arrays.toString(mClass.getSupers()));
-//        XLog.info(TAG, "fields: " + Arrays.toString(mClass.getAllFields()));
+        XLog.info(TAG, "className: " + mClass.getName());
+        XLog.info(TAG, "superClass: " + Arrays.toString(mClass.getSupers()));
+        XLog.info(TAG, "fields: " + Arrays.toString(mClass.getAllFields()));
         document.addDocumentListener(new DocumentListener() {
             @Override
             public void beforeDocumentChange(@NotNull DocumentEvent event) {
@@ -61,14 +61,14 @@ public class MainAction extends AnAction {
         });
     }
 
-//    private PsiClass getTargetClass(Editor editor, PsiFile file) {
-//        int offset = editor.getCaretModel().getOffset();
-//        PsiElement element = file.findElementAt(offset);
-//        if (element == null) {
-//            return null;
-//        } else {
-//            PsiClass target = PsiTreeUtil.getParentOfType(element, PsiClass.class);
-//            return target instanceof SyntheticElement ? null : target;
-//        }
-//    }
+    private PsiClass getTargetClass(Editor editor, PsiFile file) {
+        int offset = editor.getCaretModel().getOffset();
+        PsiElement element = file.findElementAt(offset);
+        if (element == null) {
+            return null;
+        } else {
+            PsiClass target = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+            return target instanceof SyntheticElement ? null : target;
+        }
+    }
 }
