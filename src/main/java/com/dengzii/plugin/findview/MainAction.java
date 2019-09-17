@@ -12,6 +12,7 @@ import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
+//import com.intellij.psi.impl.source.PsiJavaFileImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,8 +44,9 @@ public class MainAction extends AnAction {
         this.mPsiFile = e.getData(LangDataKeys.PSI_FILE);
         this.mClass = getTargetClass(editor, mPsiFile);
 
-        PsiElement element = e.getData(LangDataKeys.PSI_ELEMENT);
-        System.out.println(element.getText());
+        mPsiJavaFile = ((com.intellij.psi.impl.source.PsiJavaFileImpl) mPsiFile);
+
+        System.out.println(mPsiJavaFile);
 
         Document document = editor.getDocument();
         XLog.info(TAG, "className: " + mClass.getName());
