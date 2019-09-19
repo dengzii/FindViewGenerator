@@ -5,18 +5,17 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiJavaFileImpl;
 import com.intellij.ui.JBColor;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.List;
 
 public class MainAction extends AnAction {
@@ -43,7 +42,7 @@ public class MainAction extends AnAction {
             @Override
             public void mouseClicked(@NotNull EditorMouseEvent event) {
 
-                if (event.getSource() instanceof EditorImpl){
+                if (event.getSource() instanceof EditorImpl) {
                     EditorImpl editor1 = ((EditorImpl) event.getSource());
                     print("state ", editor1.dumpState());
                 }
@@ -54,7 +53,7 @@ public class MainAction extends AnAction {
             public void mouseReleased(@NotNull EditorMouseEvent event) {
                 TextAttributes attributes = new TextAttributes();
                 attributes.setForegroundColor(JBColor.GREEN);
-                editor.getMarkupModel().addLineHighlighter(0,3, attributes);
+                editor.getMarkupModel().addLineHighlighter(0, 3, attributes);
                 print("selectedText = ", editor.getSelectionModel().getSelectedText());
             }
 
@@ -130,6 +129,15 @@ public class MainAction extends AnAction {
             public void visitPlainText(PsiPlainText content) {
                 super.visitPlainText(content);
                 print(content.getText());
+            }
+        });
+    }
+
+    private void showMappingWindow(Project project) {
+        ToolWindowManager.getInstance(project).getToolWindow("com.dengzii.plugin.findview.MappingWindow").show(new Runnable() {
+            @Override
+            public void run() {
+
             }
         });
     }
