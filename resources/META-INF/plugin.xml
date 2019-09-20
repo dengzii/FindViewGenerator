@@ -11,9 +11,11 @@
 
     <depends>com.intellij.modules.all</depends>
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="com.dengzii.plugin.findview.MappingWindow"
+        <toolWindow id="MappingWindow"
+                    secondary="true"
+                    canCloseContents="false"
                     factoryClass="com.dengzii.plugin.findview.MappingWindow"
-                    anchor="right"/>
+                    anchor="bottom"/>
     </extensions>
 
     <actions>

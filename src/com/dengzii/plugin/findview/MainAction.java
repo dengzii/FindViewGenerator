@@ -10,6 +10,7 @@ import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.editor.impl.EditorImpl;
 import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiJavaFileImpl;
@@ -32,6 +33,14 @@ public class MainAction extends AnAction {
         print(psiFile.getClass().toString());
 
         Editor editor = anActionEvent.getData(PlatformDataKeys.EDITOR);
+
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("MappingWindow");
+        toolWindow.show(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
 
         if (editor != null) editor.addEditorMouseListener(new EditorMouseListener() {
             @Override

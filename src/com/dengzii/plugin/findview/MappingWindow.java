@@ -11,9 +11,9 @@ import javax.swing.*;
 
 public class MappingWindow implements ToolWindowFactory {
 
-    private JButton button1;
-    private JTextField textField1;
     private JPanel rootPanel;
+    private JTextField textField1;
+    private JButton button1;
 
     public JPanel getContent() {
         return rootPanel;
@@ -21,9 +21,8 @@ public class MappingWindow implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        MappingWindow mappingWindow = new MappingWindow();
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(mappingWindow.getContent(), "", false);
+        Content content = contentFactory.createContent(getContent(), "MappingWindow", false);
         toolWindow.getContentManager().addContent(content);
     }
 
@@ -32,10 +31,6 @@ public class MappingWindow implements ToolWindowFactory {
 
     }
 
-    @Override
-    public boolean shouldBeAvailable(@NotNull Project project) {
-        return false;
-    }
 
     @Override
     public boolean isDoNotActivateOnStart() {
