@@ -15,8 +15,10 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiJavaFileImpl;
 import com.intellij.ui.JBColor;
+import com.intellij.ui.components.DialogManager;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.List;
 
 public class MainAction extends AnAction {
@@ -26,6 +28,9 @@ public class MainAction extends AnAction {
 
         Project project = anActionEvent.getProject();
         PsiFile psiFile = anActionEvent.getData(LangDataKeys.PSI_FILE);
+        System.out.println("Project Name:" + project.getName());
+        System.out.println("Project Path" + project.getProjectFilePath());
+        System.out.println("Editor File Name:" + psiFile.getName());
 
         if (psiFile == null) return;
 
@@ -34,13 +39,38 @@ public class MainAction extends AnAction {
 
         Editor editor = anActionEvent.getData(PlatformDataKeys.EDITOR);
 
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("MappingWindow");
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Mapping Window");
         toolWindow.show(new Runnable() {
             @Override
             public void run() {
-
             }
         });
+
+        toolWindow.getContentManager().getContent(0).getBusyObject().getReady(project)
+                .doWhenDone(new Runnable() {
+                    @Override
+                    public void run() {
+                        print("======");
+                    }
+                });
+
+
+        JTextField field = (JTextField) toolWindow.getContentManager()
+                .getContent(0).getComponent()
+                .getComponent(2);
+        if (field!=null){
+            field.setText(project.getName());
+        }
+
+        Dialog dialog = new Dialog(project);
+        if (dialog.showAndGet()){
+            print("press ok");
+        }else{
+            print("press cancel");
+        }
+
+
+
 
         if (editor != null) editor.addEditorMouseListener(new EditorMouseListener() {
             @Override
@@ -51,19 +81,19 @@ public class MainAction extends AnAction {
             @Override
             public void mouseClicked(@NotNull EditorMouseEvent event) {
 
-                if (event.getSource() instanceof EditorImpl) {
-                    EditorImpl editor1 = ((EditorImpl) event.getSource());
-                    print("state ", editor1.dumpState());
-                }
-                print("area = ", event.getArea().toString());
+//                if (event.getSource() instanceof EditorImpl) {
+//                    EditorImpl editor1 = ((EditorImpl) event.getSource());
+//                    print("state ", editor1.dumpState());
+//                }
+//                print("area = ", event.getArea().toString());
             }
 
             @Override
             public void mouseReleased(@NotNull EditorMouseEvent event) {
-                TextAttributes attributes = new TextAttributes();
-                attributes.setForegroundColor(JBColor.GREEN);
-                editor.getMarkupModel().addLineHighlighter(0, 3, attributes);
-                print("selectedText = ", editor.getSelectionModel().getSelectedText());
+//                TextAttributes attributes = new TextAttributes();
+//                attributes.setForegroundColor(JBColor.GREEN);
+//                editor.getMarkupModel().addLineHighlighter(0, 3, attributes);
+//                print("selectedText = ", editor.getSelectionModel().getSelectedText());
             }
 
             @Override
@@ -78,15 +108,15 @@ public class MainAction extends AnAction {
         });
 
         if (psiFile instanceof PsiJavaFile) {
-            PsiJavaFile psiJavaFile = ((PsiJavaFile) psiFile);
-
-            if (isImportRClass((PsiJavaFileImpl) psiJavaFile)) {
-                print("find R");
-//                findLayout((PsiJavaFileImpl) psiJavaFile);
-                psiJavaFile.accept(visitor);
-            }
-            print("package ", ((PsiJavaFile) psiFile).getPackageName());
-            print("psiJavaFile", psiJavaFile);
+//            PsiJavaFile psiJavaFile = ((PsiJavaFile) psiFile);
+//
+//            if (isImportRClass((PsiJavaFileImpl) psiJavaFile)) {
+//                print("find R");
+////                findLayout((PsiJavaFileImpl) psiJavaFile);
+//                psiJavaFile.accept(visitor);
+//            }
+//            print("package ", ((PsiJavaFile) psiFile).getPackageName());
+//            print("psiJavaFile", psiJavaFile);
         }
 
         print(project.getBasePath());
@@ -95,6 +125,7 @@ public class MainAction extends AnAction {
         print(project.getName());
         print(project.getPresentableUrl());
     }
+
 
     private boolean isImportRClass(PsiJavaFileImpl psiJavaFile) {
 
