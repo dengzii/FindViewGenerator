@@ -46,6 +46,10 @@ public class MainAction extends AnAction {
             }
         });
 
+        toolWindow.getReady(project).doWhenDone(()->{
+            print("DONE");
+        });
+
         toolWindow.getContentManager().getContent(0).getBusyObject().getReady(project)
                 .doWhenDone(new Runnable() {
                     @Override
