@@ -9,12 +9,18 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GenerateFindView extends AnAction {
+
+    private static final String LAYOUT_REF_PREFIX = "R.layout.";
+    private static final String LAYOUT_FILE_SUFFIX = ".xml";
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -24,13 +30,23 @@ public class GenerateFindView extends AnAction {
         if (project == null || psiFile == null) {
             return;
         }
-        List<String> layouts = PsiFileUtils.findIntactReferenceExpressionStartWith(psiFile, "R.layout");
-        print("LAYOUTS", Arrays.toString(layouts.toArray()));
+
+        List<String> layoutRefExpr = PsiFileUtils.findIntactReferenceExpressionStartWith(psiFile, LAYOUT_REF_PREFIX);
+        List<PsiFile> layoutPsi = new ArrayList<>();
+
+        for (String layoutName : layoutRefExpr) {
+            String fileName = layoutName.substring(LAYOUT_REF_PREFIX.length()) + LAYOUT_FILE_SUFFIX;
+            PsiFile[] psiFiles = FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.allScope(project));
+            layoutPsi.addAll(Arrays.asList(psiFiles));
+        }
+
+        print("LAYOUT_FILE", Arrays.toString(layoutRefExpr.toArray()));
+        print("LAYOUT_PSI", Arrays.toString(layoutPsi.toArray()));
 
         print(project, psiFile);
     }
 
-    private List<String> findLayoutRes() {
+        private List<String> findLayoutRes() {
         return null;
     }
 
