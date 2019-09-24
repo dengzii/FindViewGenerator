@@ -28,11 +28,12 @@ public class MainAction extends AnAction {
 
         Project project = anActionEvent.getProject();
         PsiFile psiFile = anActionEvent.getData(LangDataKeys.PSI_FILE);
+
+        if (psiFile == null) return;
+
         System.out.println("Project Name:" + project.getName());
         System.out.println("Project Path" + project.getProjectFilePath());
         System.out.println("Editor File Name:" + psiFile.getName());
-
-        if (psiFile == null) return;
 
         print(psiFile.getLanguage());
         print(psiFile.getClass().toString());
@@ -66,15 +67,12 @@ public class MainAction extends AnAction {
             field.setText(project.getName());
         }
 
-        Dialog dialog = new Dialog(project);
+        Dialog dialog = new Dialog(project, null);
         if (dialog.showAndGet()){
             print("press ok");
         }else{
             print("press cancel");
         }
-
-
-
 
         if (editor != null) editor.addEditorMouseListener(new EditorMouseListener() {
             @Override

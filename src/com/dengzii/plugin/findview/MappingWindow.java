@@ -23,6 +23,8 @@ public class MappingWindow implements ToolWindowFactory {
     private JPanel rootPanel;
     private JTextField textField1;
     private JButton button1;
+    private JTextField textField2;
+    private JTextField textField3;
 
     public JPanel getContent() {
         return rootPanel;
