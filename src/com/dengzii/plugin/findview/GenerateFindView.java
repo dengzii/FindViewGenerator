@@ -39,34 +39,18 @@ public class GenerateFindView extends AnAction {
             layoutPsi.addAll(Arrays.asList(psiFiles));
         }
 
-        Map<String, Map<String, String>> layoutFileIndex = new HashMap<>();
+        Map<String, List<AndroidView>> layoutViews = new HashMap<>();
         for (PsiFile p : layoutPsi) {
             if (p instanceof XmlFile) {
-                layoutFileIndex.put(p.getName(), PsiFileUtils.getIdAndTagNameFrom(((XmlFile) p)));
+                layoutViews.put(p.getName(), PsiFileUtils.getAndroidIdInfoFrom(((XmlFile) p)));
             }
         }
 
         print("LAYOUT_FILE", Arrays.toString(layoutRefExpr.toArray()));
 
-        Dialog dialog = new Dialog(project, wrap(layoutFileIndex));
+        Dialog dialog = new Dialog(project, layoutViews);
         dialog.show();
         print(project, psiFile);
-    }
-
-    private Map<String, List<AndroidView>> wrap(Map<String, Map<String, String>> layoutFileIndex){
-
-        Map<String, List<AndroidView>> result = new HashMap<>();
-        for (String f : layoutFileIndex.keySet()) {
-            result.put(f, new ArrayList<>());
-            for (String id : layoutFileIndex.get(f).keySet()) {
-                String fullViewName = layoutFileIndex.get(f).get(id);
-                String className = fullViewName.contains(".")
-                        ? fullViewName.substring(fullViewName.lastIndexOf(".") + 1)
-                        : fullViewName;
-                result.get(f).add(new AndroidView(className, id, f, fullViewName));
-            }
-        }
-        return result;
     }
 
     private boolean isJavaLang(PsiFile psiFile) {

@@ -2,8 +2,7 @@ package com.dengzii.plugin.findview;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.components.*;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -14,54 +13,133 @@ import java.util.*;
 
 public class Dialog extends DialogWrapper {
 
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
+
+    private JBPanel contentPanel;
+    private JBScrollPane viewIdMappingScroll;
+    private JBList<String> layoutFileList;
+    private JBPanel viewIdMappingPanel;
+
+    private int mSelectedLayoutFileIndex = 0;
+    private List<String> mLayoutFiles = new ArrayList<>();
     private Map<String, List<AndroidView>> mMappingData = new HashMap<>();
 
-    protected Dialog(@Nullable Project project, Map<String,List<AndroidView>> layoutFileIndex) {
+    Dialog(@Nullable Project project, Map<String, List<AndroidView>> layoutFileIndex) {
         super(project);
-        if (layoutFileIndex != null)
-            this.mMappingData.putAll(layoutFileIndex);
+        if (layoutFileIndex != null && !layoutFileIndex.isEmpty()) {
+            mMappingData.putAll(layoutFileIndex);
+            mLayoutFiles.addAll(mMappingData.keySet());
+        }
         init();
         setTitle("Test Dialog");
+    }
+
+    private void initContentPanel() {
+
+        BorderLayout borderLayout = new BorderLayout();
+        borderLayout.setHgap(10);
+        borderLayout.setVgap(10);
+
+        contentPanel = new JBPanel(borderLayout);
+        contentPanel.setPreferredSize(new Dimension(WIDTH + 60, 400));
+    }
+
+    private void initLayoutFileList() {
+
+        JBScrollPane scrollPane = new JBScrollPane();
+        scrollPane.setPreferredSize(new Dimension(WIDTH, 70));
+
+        layoutFileList = new JBList<String>(new XLayoutModel(mMappingData.keySet()));
+        layoutFileList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(layoutFileList);
+        scrollPane.setBorder(new BorderUIResource.TitledBorderUIResource("Layout Resource"));
+        contentPanel.add(scrollPane, BorderLayout.NORTH);
+
+        layoutFileList.addListSelectionListener(e -> {
+            mSelectedLayoutFileIndex = layoutFileList.getSelectedIndex();
+            refreshViewIdMappingList();
+        });
+    }
+
+    private void initViewIdMappingPanel() {
+
+        viewIdMappingScroll = new JBScrollPane();
+        viewIdMappingScroll.setPreferredSize(new Dimension(WIDTH, 300));
+
+        FlowLayout flowLayout = new FlowLayout();
+        flowLayout.setAlignment(FlowLayout.LEFT);
+        viewIdMappingPanel = new JBPanel(flowLayout);
+        viewIdMappingPanel.setBorder(new BorderUIResource.TitledBorderUIResource("View Id Mapping"));
+
+        viewIdMappingScroll.setViewportView(viewIdMappingPanel);
+        contentPanel.add(viewIdMappingScroll);
+        refreshViewIdMappingList();
+    }
+
+    private void refreshViewIdMappingList() {
+
+        viewIdMappingPanel.removeAll();
+        List<AndroidView> views = mMappingData.get(mLayoutFiles.get(mSelectedLayoutFileIndex));
+
+        viewIdMappingPanel.add(getMappingListTitleRow());
+        viewIdMappingPanel.setPreferredSize(new Dimension(WIDTH, views.size() * 15));
+        for (AndroidView androidView : views) {
+            viewIdMappingPanel.add(getMappingListRow(androidView));
+        }
+        viewIdMappingPanel.revalidate();
+        viewIdMappingPanel.repaint();
+    }
+
+    private JPanel getMappingListRow(AndroidView androidView) {
+
+        JBPanel panel = new JBPanel();
+        panel.setPreferredSize(new Dimension(WIDTH, 15));
+        panel.setLayout(new GridLayout(1, 4));
+        panel.add(getLabel(androidView.id));
+        panel.add(getLabel(androidView.name));
+        panel.add(getLabel(androidView.layout));
+        JBCheckBox jbCheckBox = new JBCheckBox();
+        jbCheckBox.setSelected(true);
+        panel.add(new JBCheckBox());
+        return panel;
+    }
+
+    private JPanel getMappingListTitleRow() {
+
+        JBPanel panel = new JBPanel();
+        panel.setPreferredSize(new Dimension(WIDTH, 15));
+        panel.setLayout(new GridLayout(1, 4));
+        panel.add(getTitleLabel("View Id"));
+        panel.add(getTitleLabel("View Class"));
+        panel.add(getTitleLabel("Field"));
+        panel.add(getTitleLabel("Generate"));
+
+        return panel;
     }
 
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
-        BorderLayout borderLayout = new BorderLayout();
-        borderLayout.setHgap(16);
-        borderLayout.setVgap(16);
 
-        JPanel dialogPanel = new JPanel(borderLayout);
-        dialogPanel.setPreferredSize(new Dimension(600, 420));
+        initContentPanel();
+        initLayoutFileList();
+        initViewIdMappingPanel();
 
-        JBScrollPane jbScrollPane = new JBScrollPane();
-        jbScrollPane.setPreferredSize(new Dimension(600, 50));
-        JBList<String> list = new JBList<String>(new XLayoutModel(mMappingData.keySet()));
-        jbScrollPane.setViewportView(list);
-        dialogPanel.add(jbScrollPane, BorderLayout.CENTER);
-        list.setBorder(new BorderUIResource.TitledBorderUIResource("Layout Resource"));
+        return contentPanel;
+    }
 
-        JBScrollPane jbScrollPane1 = new JBScrollPane();
-        jbScrollPane1.setPreferredSize(new Dimension(600, 300));
-        GridLayout gridLayout = new GridLayout(25, 4);
-        gridLayout.setHgap(5);
-        gridLayout.setVgap(5);
-        JPanel panelMapping = new JPanel(gridLayout);
-        for (String f:mMappingData.keySet()) {
-            for (AndroidView androidView : mMappingData.get(f)) {
-                panelMapping.add(new JLabel(androidView.layout));
-                panelMapping.add(new JLabel(androidView.name));
-                panelMapping.add(new JLabel(androidView.id));
-                panelMapping.add(new JLabel(androidView.name));
-            }
-        }
-        panelMapping.setBorder(new BorderUIResource.TitledBorderUIResource("Mapping View"));
-        jbScrollPane1.setViewportView(panelMapping);
-        dialogPanel.add(jbScrollPane1, BorderLayout.SOUTH);
+    private static JBLabel getTitleLabel(String title) {
+        JBLabel JBLabel = new JBLabel(title);
+        JBLabel.setFont(JBLabel.getFont().deriveFont(Font.BOLD));
+        return JBLabel;
+    }
 
-        list.revalidate();
-
-        return dialogPanel;
+    private static JBLabel getLabel(String title) {
+        JBLabel label = new JBLabel(title);
+        label.setPreferredSize(new Dimension(WIDTH / 4, 15));
+        return label;
     }
 }
 

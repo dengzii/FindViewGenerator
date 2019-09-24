@@ -8,18 +8,16 @@ import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PsiFileUtils {
 
     private static final String ANDROID_ID_ATTR_NAME = "android:id";
     private static final String ANDROID_ID_PREFIX = "@+id/";
 
-    public static Map<String, String> getIdAndTagNameFrom(XmlFile xmlFile) {
-        Map<String, String> result = new HashMap<>();
-        visitAndFindChild(xmlFile, result);
+    public static List<AndroidView> getAndroidIdInfoFrom(XmlFile xmlFile) {
+        List<AndroidView> result = new ArrayList<>();
+        visitAndFindChild(xmlFile, xmlFile, result);
         return result;
     }
 
@@ -30,7 +28,7 @@ public class PsiFileUtils {
         return list;
     }
 
-    private static void visitAndFindChild(PsiElement psiElement, final Map<String, String> result) {
+    private static void visitAndFindChild(PsiFile psiFile, PsiElement psiElement, final List<AndroidView> result) {
         psiElement.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -40,10 +38,16 @@ public class PsiFileUtils {
                     String id = tag.getAttributeValue(ANDROID_ID_ATTR_NAME);
                     String type = tag.getName();
                     if (id != null) {
-                        result.put(id.replace(ANDROID_ID_PREFIX, ""), type);
+                        AndroidView androidView = new AndroidView(
+                                type.contains(".") ? type.substring(type.lastIndexOf(".") + 1) : type,
+                                id.replace(ANDROID_ID_PREFIX, ""),
+                                psiFile.getName(),
+                                type
+                        );
+                        result.add(androidView);
                     }
                 }
-                visitAndFindChild(element, result);
+                visitAndFindChild(psiFile, element, result);
             }
         });
     }
