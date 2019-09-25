@@ -20,14 +20,14 @@
 
     <actions>
 
-        <action id="com.dengzii.plugin.findview.main" class="com.dengzii.plugin.findview.MainAction"
+        <action id="com.dengzii.plugin.findview.main" class="com.dengzii.plugin.findview.TestMainAction"
                 text="Generate FindViewById"
                 description="Generate findViewById action" keymap="$default">
 
             <add-to-group group-id="ToolsMenu" anchor="first"/>
             <keyboard-shortcut first-keystroke="alt G" keymap="$default"/>
         </action>
-        <action id="com.dengzii.plugn.findview.action1" class="com.dengzii.plugin.findview.GenerateFindView"
+        <action id="com.dengzii.plugn.findview.action1" class="com.dengzii.plugin.findview.MainAction"
                 text="Generate Find View" description="Generate Find View">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="alt F"/>

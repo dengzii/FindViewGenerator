@@ -15,7 +15,7 @@ public class PsiFileUtils {
     private static final String ANDROID_ID_ATTR_NAME = "android:id";
     private static final String ANDROID_ID_PREFIX = "@+id/";
 
-    public static List<AndroidView> getAndroidIdInfoFrom(XmlFile xmlFile) {
+    public static List<AndroidView> getAndroidViewInfoFrom(XmlFile xmlFile) {
         List<AndroidView> result = new ArrayList<>();
         visitAndFindChild(xmlFile, xmlFile, result);
         return result;

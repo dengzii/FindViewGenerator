@@ -1,182 +1,62 @@
 package com.dengzii.plugin.findview;
 
+import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.EditorMouseEvent;
-import com.intellij.openapi.editor.event.EditorMouseListener;
-import com.intellij.openapi.editor.impl.EditorImpl;
-import com.intellij.openapi.editor.markup.TextAttributes;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiJavaFileImpl;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.components.DialogManager;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.PsiFile;
 
 import javax.swing.*;
 import java.util.List;
 
 public class MainAction extends AnAction {
 
+
     @Override
-    public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+    public void actionPerformed(AnActionEvent e) {
 
-        Project project = anActionEvent.getProject();
-        PsiFile psiFile = anActionEvent.getData(LangDataKeys.PSI_FILE);
+        Project project = e.getProject();
+        PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
 
-        if (psiFile == null) return;
+        if (project == null || psiFile == null || !isJavaLang(psiFile)) {
+            return;
+        }
 
-        System.out.println("Project Name:" + project.getName());
-        System.out.println("Project Path" + project.getProjectFilePath());
-        System.out.println("Editor File Name:" + psiFile.getName());
+        ViewIdMappingDialog viewIdMappingDialog = new ViewIdMappingDialog(project, LayoutFindUtils.findJava(psiFile, project));
+        if (viewIdMappingDialog.showAndGet()) {
+            List<AndroidView> androidViews = viewIdMappingDialog.getResult();
 
-        print(psiFile.getLanguage());
-        print(psiFile.getClass().toString());
+        }
+    }
 
-        Editor editor = anActionEvent.getData(PlatformDataKeys.EDITOR);
+    private boolean isJavaLang(PsiFile psiFile) {
+        return psiFile.getLanguage().is(Language.findLanguageByID("JAVA"))
+                || psiFile.getLanguage().is(Language.findLanguageByID("KOTLIN"));
+    }
 
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Mapping Window");
-        toolWindow.show(new Runnable() {
+    private void d(AnActionEvent e) {
+        // invokeLater
+        // The way to pass control from background thread to the event dispatch thread
+        ApplicationManager.getApplication().invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("GenerateFindView.run");
+            }
+        }, ModalityState.any());
+
+        // NOT THAT WAY, This way is use for default swing kit
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
             }
         });
 
-        toolWindow.getReady(project).doWhenDone(()->{
-            print("DONE");
-        });
-
-        toolWindow.getContentManager().getContent(0).getBusyObject().getReady(project)
-                .doWhenDone(new Runnable() {
-                    @Override
-                    public void run() {
-                        print("======");
-                    }
-                });
-
-
-        JTextField field = (JTextField) toolWindow.getContentManager()
-                .getContent(0).getComponent()
-                .getComponent(2);
-        if (field!=null){
-            field.setText(project.getName());
-        }
-
-        Dialog dialog = new Dialog(project, null);
-        if (dialog.showAndGet()){
-            print("press ok");
-        }else{
-            print("press cancel");
-        }
-
-        if (editor != null) editor.addEditorMouseListener(new EditorMouseListener() {
-            @Override
-            public void mousePressed(@NotNull EditorMouseEvent event) {
-
-            }
-
-            @Override
-            public void mouseClicked(@NotNull EditorMouseEvent event) {
-
-//                if (event.getSource() instanceof EditorImpl) {
-//                    EditorImpl editor1 = ((EditorImpl) event.getSource());
-//                    print("state ", editor1.dumpState());
-//                }
-//                print("area = ", event.getArea().toString());
-            }
-
-            @Override
-            public void mouseReleased(@NotNull EditorMouseEvent event) {
-//                TextAttributes attributes = new TextAttributes();
-//                attributes.setForegroundColor(JBColor.GREEN);
-//                editor.getMarkupModel().addLineHighlighter(0, 3, attributes);
-//                print("selectedText = ", editor.getSelectionModel().getSelectedText());
-            }
-
-            @Override
-            public void mouseEntered(@NotNull EditorMouseEvent event) {
-
-            }
-
-            @Override
-            public void mouseExited(@NotNull EditorMouseEvent event) {
-
-            }
-        });
-
-        if (psiFile instanceof PsiJavaFile) {
-//            PsiJavaFile psiJavaFile = ((PsiJavaFile) psiFile);
-//
-//            if (isImportRClass((PsiJavaFileImpl) psiJavaFile)) {
-//                print("find R");
-////                findLayout((PsiJavaFileImpl) psiJavaFile);
-//                psiJavaFile.accept(visitor);
-//            }
-//            print("package ", ((PsiJavaFile) psiFile).getPackageName());
-//            print("psiJavaFile", psiJavaFile);
-        }
-
-        print(project.getBasePath());
-        print(project.getName());
-        print(project.getProjectFilePath());
-        print(project.getName());
-        print(project.getPresentableUrl());
-    }
-
-
-    private boolean isImportRClass(PsiJavaFileImpl psiJavaFile) {
-
-        PsiImportList importList = psiJavaFile.getImportList();
-        if (importList != null) {
-            for (PsiImportStatementBase allImportStatement : importList.getAllImportStatements()) {
-                if (allImportStatement != null && allImportStatement.getText().endsWith(".R;")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private List<String> findLayout(PsiJavaFileImpl psiJavaFile) {
-        psiJavaFile.accept(new PsiElementVisitor() {
-            @Override
-            public void visitElement(PsiElement element) {
-                super.visitElement(element);
-            }
-
-            @Override
-            public void visitPlainText(PsiPlainText content) {
-                super.visitPlainText(content);
-                print(content.getText());
-            }
-        });
-        return null;
-    }
-
-    private void visitor(int level, PsiElement element) {
-        element.accept(new PsiElementVisitor() {
-            @Override
-            public void visitElement(PsiElement element) {
-                super.visitElement(element);
-                print(level, "->", element);
-                visitor(level + 1, element);
-            }
-
-            @Override
-            public void visitPlainText(PsiPlainText content) {
-                super.visitPlainText(content);
-                print(content.getText());
-            }
-        });
-    }
-
-    private void showMappingWindow(Project project) {
-        ToolWindowManager.getInstance(project).getToolWindow("com.dengzii.plugin.findview.MappingWindow").show(new Runnable() {
+        /* Access fle-based index, this will run after all processes have bean complete */
+        DumbService.getInstance(e.getProject()).smartInvokeLater(new Runnable() {
             @Override
             public void run() {
 
@@ -190,18 +70,4 @@ public class MainAction extends AnAction {
         }
         System.out.println("");
     }
-
-    @Override
-    public boolean isDumbAware() {
-        return false;
-    }
-
-    private PsiElementVisitor visitor = new PsiElementVisitor() {
-        @Override
-        public void visitElement(PsiElement element) {
-            super.visitElement(element);
-            print(element);
-            element.acceptChildren(this);
-        }
-    };
 }
