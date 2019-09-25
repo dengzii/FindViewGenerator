@@ -4,11 +4,18 @@ import com.intellij.lang.Language;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.SyntheticElement;
+import com.intellij.psi.util.PsiTreeUtil;
 
 import javax.swing.*;
 import java.util.List;
@@ -21,21 +28,46 @@ public class MainAction extends AnAction {
 
         Project project = e.getProject();
         PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
+        Editor editor = e.getData(PlatformDataKeys.EDITOR);
 
-        if (project == null || psiFile == null || !isJavaLang(psiFile)) {
+        if (project == null || psiFile == null || !isJavaLang(psiFile) || editor == null) {
             return;
         }
+        PsiClass psiClass = getPsiClass(editor, psiFile);
 
         ViewIdMappingDialog viewIdMappingDialog = new ViewIdMappingDialog(project, LayoutFindUtils.findJava(psiFile, project));
         if (viewIdMappingDialog.showAndGet()) {
             List<AndroidView> androidViews = viewIdMappingDialog.getResult();
-
+            WriteCommandAction.writeCommandAction(project).run(new FindViewCodeGenerator(psiClass, project, androidViews));
         }
     }
 
     private boolean isJavaLang(PsiFile psiFile) {
         return psiFile.getLanguage().is(Language.findLanguageByID("JAVA"))
                 || psiFile.getLanguage().is(Language.findLanguageByID("KOTLIN"));
+    }
+
+    private PsiClass getPsiClass(Editor editor, PsiFile file) {
+
+        int offset = editor.getCaretModel().getOffset();
+
+        PsiElement element = file.findElementAt(offset);
+
+        if (element == null)
+            element = file.findElementAt(offset - 1);
+
+        if (element == null) {
+            return null;
+        } else {
+            PsiClass target = (PsiClass) PsiTreeUtil.getParentOfType(element, PsiClass.class);
+            if (target == null) {
+                element = file.findElementAt(offset - 1);
+                if (element == null)
+                    return null;
+                target = (PsiClass) PsiTreeUtil.getParentOfType(element, PsiClass.class);
+            }
+            return target instanceof SyntheticElement ? null : target;
+        }
     }
 
     private void d(AnActionEvent e) {
