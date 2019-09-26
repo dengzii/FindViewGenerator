@@ -43,18 +43,18 @@ public class PsiFileUtils {
 
     public static List<ViewInfo> getAndroidViewInfoFrom(XmlFile xmlFile) {
         List<ViewInfo> result = new ArrayList<>();
-        visitAndFindChild(xmlFile, xmlFile, result);
+        visitLayoutXmlFile(xmlFile, xmlFile, result);
         return result;
     }
 
     public static List<String> findLayoutStatement(PsiFile psiFile) {
 
         List<String> list = new ArrayList<>();
-        visitAndFindChild(psiFile, list);
+        visitStatement(psiFile, list);
         return list;
     }
 
-    private static void visitAndFindChild(PsiFile psiFile, PsiElement psiElement, final List<ViewInfo> result) {
+    private static void visitLayoutXmlFile(PsiFile psiFile, PsiElement psiElement, final List<ViewInfo> result) {
         psiElement.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -74,12 +74,12 @@ public class PsiFileUtils {
                         result.add(viewInfo);
                     }
                 }
-                visitAndFindChild(psiFile, element, result);
+                visitLayoutXmlFile(psiFile, element, result);
             }
         });
     }
 
-    private static void visitAndFindChild(PsiElement psiElement, final List<String> result) {
+    private static void visitStatement(PsiElement psiElement, final List<String> result) {
 
         psiElement.acceptChildren(new PsiElementVisitor() {
             @Override
@@ -89,10 +89,9 @@ public class PsiFileUtils {
                     String expression = element.getText();
                     if (expression.startsWith(LAYOUT_REF_PREFIX)) {
                         result.add(expression);
-                        System.out.println(expression);
                     }
                 }
-                visitAndFindChild(element, result);
+                visitStatement(element, result);
             }
         });
     }

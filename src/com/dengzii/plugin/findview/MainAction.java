@@ -45,7 +45,7 @@ public class MainAction extends AnAction {
 
         if (viewIdMappingDialog.showAndGet()) {
             List<ViewInfo> viewInfos = viewIdMappingDialog.getResult();
-            WriteCommandAction.writeCommandAction(project).run(new FindViewCodeWriter(psiClass, project, viewInfos));
+            WriteCommandAction.writeCommandAction(project).run(new FindViewCodeWriter(psiFile, editor, viewInfos));
         }
     }
 
@@ -56,23 +56,13 @@ public class MainAction extends AnAction {
 
     private KtClass getKtClass(Editor editor, PsiFile file) {
 
-        int offset = editor.getCaretModel().getOffset();
-        PsiElement element = file.findElementAt(offset);
-
-        if (element == null)
-            element = file.findElementAt(offset - 1);
-        if (element == null) {
-            return null;
-        } else {
-            KtClass target = (KtClass) PsiTreeUtil.getParentOfType(element, KtClass.class);
-            if (target == null) {
-                element = file.findElementAt(offset - 1);
-                if (element == null)
-                    return null;
-                target = (KtClass) PsiTreeUtil.getParentOfType(element, KtClass.class);
+        PsiElement[] elements = file.getChildren();
+        for (PsiElement element :elements){
+            if (editor instanceof  KtClass){
+                return ((KtClass) element);
             }
-            return target instanceof SyntheticElement ? null : target;
         }
+        return null;
     }
 
     private PsiClass getPsiClass(Editor editor, PsiFile file) {
