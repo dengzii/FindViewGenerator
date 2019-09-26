@@ -10,11 +10,12 @@
     <!--    <change-notes></change-notes>-->
 
     <depends>com.intellij.modules.all</depends>
+    <depends>org.jetbrains.kotlin</depends>
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Mapping Window"
                     secondary="true"
                     canCloseContents="false"
-                    factoryClass="com.dengzii.plugin.findview.MappingWindow"
+                    factoryClass="com.dengzii.plugin.findview.ui.MappingWindow"
                     anchor="bottom"/>
     </extensions>
 

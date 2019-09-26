@@ -1,6 +1,9 @@
 package com.dengzii.plugin.findview;
 
-public class AndroidView {
+public class ViewInfo {
+
+    private static final String NAMED_PREFIX = "m";
+
     private String type;
     private String id;
     private String layout;
@@ -8,49 +11,45 @@ public class AndroidView {
     private String mappingField;
     private boolean generate = true;
 
-    public AndroidView(String type, String id, String layout) {
-        this.type = type;
-        this.id = id;
-        this.layout = layout;
-    }
-
-    public AndroidView(String type, String id, String layout, String fullName) {
+    public ViewInfo(String type, String id, String layout, String fullName) {
         this.type = type;
         this.id = id;
         this.layout = layout;
         this.fullName = fullName;
+    }
+
+    public void genMappingField(){
+
+        StringBuilder builder = new StringBuilder(NAMED_PREFIX);
+        if (id.contains("_")) {
+            String[] split = id.toLowerCase().split("_");
+            for (String s : split) {
+                if (s.length() >= 1) {
+                    String c = s.substring(0, 1).toUpperCase();
+                    builder.append(c).append(s.substring(1));
+                }
+            }
+        } else {
+            String c = id.substring(0, 1).toUpperCase();
+            builder.append(c).append(id.substring(1));
+        }
+        this.mappingField = builder.toString();
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getLayout() {
         return layout;
     }
 
-    public void setLayout(String layout) {
-        this.layout = layout;
-    }
-
     public String getFullName() {
         return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getMappingField() {

@@ -1,5 +1,6 @@
-package com.dengzii.plugin.findview;
+package com.dengzii.plugin.findview.ui;
 
+import com.dengzii.plugin.findview.ViewInfo;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.components.*;
@@ -13,7 +14,6 @@ import java.util.*;
 
 public class ViewIdMappingDialog extends DialogWrapper {
 
-    private static final String NAMED_PREFIX = "m";
     private static final int NAMED_BY_ID = 467;
     private static final int NAMED_BY_CLASS_AND_ID = 245;
 
@@ -29,10 +29,10 @@ public class ViewIdMappingDialog extends DialogWrapper {
 
     private int mSelectedLayoutFileIndex = 0;
     private List<String> mLayoutFiles = new ArrayList<>();
-    private Map<String, List<AndroidView>> mFileMappingData = new HashMap<>();
-    private List<AndroidView> mCurrent = new ArrayList<>();
+    private Map<String, List<ViewInfo>> mFileMappingData = new HashMap<>();
+    private List<ViewInfo> mCurrent = new ArrayList<>();
 
-    ViewIdMappingDialog(@Nullable Project project, Map<String, List<AndroidView>> layoutFileIndex) {
+    public ViewIdMappingDialog(@Nullable Project project, Map<String, List<ViewInfo>> layoutFileIndex) {
         super(project);
         if (layoutFileIndex != null && !layoutFileIndex.isEmpty()) {
             mFileMappingData.putAll(layoutFileIndex);
@@ -42,7 +42,7 @@ public class ViewIdMappingDialog extends DialogWrapper {
         setTitle("Generate Find View");
     }
 
-    public List<AndroidView> getResult() {
+    public List<ViewInfo> getResult() {
 
         if (mFieldName.size() != mCurrent.size() || mGenerateCheckoutBox.size() != mCurrent.size()) {
             return mCurrent;
@@ -118,21 +118,21 @@ public class ViewIdMappingDialog extends DialogWrapper {
                 new Dimension(CONTENT_WIDTH, mCurrent.size() * (MAPPING_ROW_HEIGHT + 8)));
         mFieldName.clear();
         mGenerateCheckoutBox.clear();
-        for (AndroidView androidView : mCurrent) {
-            mViewIdMappingPanel.add(getMappingListRow(androidView));
+        for (ViewInfo viewInfo : mCurrent) {
+            mViewIdMappingPanel.add(getMappingListRow(viewInfo));
         }
         mViewIdMappingPanel.revalidate();
         mViewIdMappingPanel.repaint();
     }
 
-    private JPanel getMappingListRow(AndroidView androidView) {
+    private JPanel getMappingListRow(ViewInfo viewInfo) {
 
         JBPanel panel = getMappingListRowPanel();
         panel.setLayout(new GridLayout(1, 4));
-        panel.add(getLabel(androidView.getId()));
-        panel.add(getLabel(androidView.getType()));
+        panel.add(getLabel(viewInfo.getId()));
+        panel.add(getLabel(viewInfo.getType()));
 
-        panel.add(getMappingTextField(androidView));
+        panel.add(getMappingTextField(viewInfo));
 
         JBCheckBox jbCheckBox = new JBCheckBox();
         jbCheckBox.setSelected(true);
@@ -172,49 +172,13 @@ public class ViewIdMappingDialog extends DialogWrapper {
         return label;
     }
 
-    private JBTextField getMappingTextField(AndroidView androidView) {
-        JBTextField jbTextField = new JBTextField(getViewIdMappingField(androidView.getId(), androidView.getType()));
+    private JBTextField getMappingTextField(ViewInfo viewInfo) {
+        JBTextField jbTextField = new JBTextField(viewInfo.getMappingField());
         jbTextField.setPreferredSize(new Dimension(MAPPING_COL_WIDTH, MAPPING_ROW_HEIGHT));
         jbTextField.setBorder(new BorderUIResource.EmptyBorderUIResource(1,1,1,1));
         jbTextField.setHorizontalAlignment(SwingConstants.LEFT);
         mFieldName.add(jbTextField);
         return jbTextField;
     }
-
-    private String getViewIdMappingField(String id, String viewClass) {
-
-        StringBuilder builder = new StringBuilder(NAMED_PREFIX);
-        if (id.contains("_")) {
-            String[] split = id.toLowerCase().split("_");
-            for (String s : split) {
-                if (s.length() >= 1) {
-                    String c = s.substring(0, 1).toUpperCase();
-                    builder.append(c).append(s.substring(1));
-                }
-            }
-        } else {
-            String c = id.substring(0, 1).toUpperCase();
-            builder.append(c).append(id.substring(1));
-        }
-        return builder.toString();
-    }
 }
 
-class XLayoutModel extends AbstractListModel<String> {
-
-    private ArrayList<String> list = new ArrayList<String>();
-
-    XLayoutModel(Collection<String> list) {
-        this.list.addAll(list);
-    }
-
-    @Override
-    public int getSize() {
-        return list.size();
-    }
-
-    @Override
-    public String getElementAt(int index) {
-        return list.get(index);
-    }
-}

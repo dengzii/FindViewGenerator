@@ -1,4 +1,4 @@
-package com.dengzii.plugin.findview;
+package com.dengzii.plugin.findview.ui;
 
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;

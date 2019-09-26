@@ -1,10 +1,10 @@
 package com.dengzii.plugin.findview;
 
+import com.dengzii.plugin.findview.gen.FindViewCodeWriter;
+import com.dengzii.plugin.findview.ui.ViewIdMappingDialog;
+import com.dengzii.plugin.findview.utils.PsiFileUtils;
 import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -16,6 +16,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.SyntheticElement;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.jetbrains.kotlin.psi.KtClass;
 
 import javax.swing.*;
 import java.util.List;
@@ -27,35 +28,60 @@ public class MainAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
 
         Project project = e.getProject();
-        PsiFile psiFile = e.getData(LangDataKeys.PSI_FILE);
-        Editor editor = e.getData(PlatformDataKeys.EDITOR);
+        PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
+        Editor editor = e.getData(CommonDataKeys.EDITOR);
 
-        if (project == null || psiFile == null || !isJavaLang(psiFile) || editor == null) {
+        if (project == null || psiFile == null || editor == null) {
             return;
         }
-        PsiClass psiClass = getPsiClass(editor, psiFile);
 
-        ViewIdMappingDialog viewIdMappingDialog = new ViewIdMappingDialog(project, LayoutFindUtils.findJava(psiFile, project));
+        PsiFileUtils.getViewInfoFromPsiFile(psiFile, project);
+
+        PsiClass psiClass = getPsiClass(editor, psiFile);
+        KtClass ktClass = getKtClass(editor, psiFile);
+
+        ViewIdMappingDialog viewIdMappingDialog = new ViewIdMappingDialog(project,
+                PsiFileUtils.getViewInfoFromPsiFile(psiFile, project));
+
         if (viewIdMappingDialog.showAndGet()) {
-            List<AndroidView> androidViews = viewIdMappingDialog.getResult();
-            WriteCommandAction.writeCommandAction(project).run(new FindViewCodeGenerator(psiClass, project, androidViews));
+            List<ViewInfo> viewInfos = viewIdMappingDialog.getResult();
+            WriteCommandAction.writeCommandAction(project).run(new FindViewCodeWriter(psiClass, project, viewInfos));
         }
     }
 
-    private boolean isJavaLang(PsiFile psiFile) {
-        return psiFile.getLanguage().is(Language.findLanguageByID("JAVA"))
-                || psiFile.getLanguage().is(Language.findLanguageByID("KOTLIN"));
+    private boolean isJavaKotlinLang(PsiFile psiFile) {
+        return psiFile.getVirtualFile().getName().endsWith(".java")
+                || psiFile.getVirtualFile().getName().endsWith(".kt");
+    }
+
+    private KtClass getKtClass(Editor editor, PsiFile file) {
+
+        int offset = editor.getCaretModel().getOffset();
+        PsiElement element = file.findElementAt(offset);
+
+        if (element == null)
+            element = file.findElementAt(offset - 1);
+        if (element == null) {
+            return null;
+        } else {
+            KtClass target = (KtClass) PsiTreeUtil.getParentOfType(element, KtClass.class);
+            if (target == null) {
+                element = file.findElementAt(offset - 1);
+                if (element == null)
+                    return null;
+                target = (KtClass) PsiTreeUtil.getParentOfType(element, KtClass.class);
+            }
+            return target instanceof SyntheticElement ? null : target;
+        }
     }
 
     private PsiClass getPsiClass(Editor editor, PsiFile file) {
 
         int offset = editor.getCaretModel().getOffset();
-
         PsiElement element = file.findElementAt(offset);
 
         if (element == null)
             element = file.findElementAt(offset - 1);
-
         if (element == null) {
             return null;
         } else {

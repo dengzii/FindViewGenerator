@@ -1,5 +1,6 @@
 package com.dengzii.plugin.findview;
 
+import com.dengzii.plugin.findview.ui.ViewIdMappingDialog;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
