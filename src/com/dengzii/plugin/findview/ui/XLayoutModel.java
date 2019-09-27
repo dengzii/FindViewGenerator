@@ -4,6 +4,15 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * <pre>
+ * author : dengzi
+ * e-mail : denua@foxmail.com
+ * github : https://github.com/MrDenua
+ * time   : 2019/9/27
+ * desc   :
+ * </pre>
+ */
 class XLayoutModel extends AbstractListModel<String> {
 
     private ArrayList<String> list = new ArrayList<String>();

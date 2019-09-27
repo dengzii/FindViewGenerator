@@ -5,7 +5,17 @@ import com.intellij.lang.Language;
 import com.intellij.psi.*;
 
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * <pre>
+ * author : dengzi
+ * e-mail : denua@foxmail.com
+ * github : https://github.com/MrDenua
+ * time   : 2019/9/27
+ * desc   :
+ * </pre>
+ */
 public class JavaCase extends BaseCase {
 
     private static final Language JAVA = Language.findLanguageByID("JAVA");
@@ -24,12 +34,15 @@ public class JavaCase extends BaseCase {
 
         PsiElementFactory factory = PsiElementFactory.getInstance(psiElement.getProject());
         PsiClass psiClass = getPsiClass(psiElement);
+        if (Objects.isNull(psiClass)) {
+            return;
+        }
         PsiMethod initViewMethod = genInitViewMethod(factory);
 
         for (ViewInfo viewInfo : viewInfos) {
             if (!viewInfo.isGenerate()) continue;
             psiClass.add(genViewDeclareField(factory, viewInfo));
-            if (initViewMethod.getBody() != null) {
+            if (!Objects.isNull(initViewMethod.getBody())) {
                 initViewMethod.getBody().add(genFindViewStatement(factory, viewInfo));
             }
         }

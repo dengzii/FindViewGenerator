@@ -1,5 +1,14 @@
 package com.dengzii.plugin.findview;
 
+/**
+ * <pre>
+ * author : dengzi
+ * e-mail : denua@foxmail.com
+ * github : https://github.com/MrDenua
+ * time   : 2019/9/27
+ * desc   :
+ * </pre>
+ */
 public class ViewInfo {
 
     private static final String NAMED_PREFIX = "m";
@@ -18,7 +27,7 @@ public class ViewInfo {
         this.fullName = fullName;
     }
 
-    public void genMappingField(){
+    public void genMappingField() {
 
         StringBuilder builder = new StringBuilder(NAMED_PREFIX);
         if (id.contains("_")) {

@@ -1,37 +1,22 @@
-<idea-plugin url="github.com/mrdenua/find">
+<idea-plugin url="https://github.com/MrDenua/FindViewGenerator">
 
-    <name>GenerateFindView</name>
+    <name>Generate FindViewById</name>
     <id>com.dengzii.plugin.findview</id>
     <version>1.0</version>
 
-    <description>auto generate find view by id in android.</description>
-    <vendor email="denua@foxmail.com" url="http://dengzii.com">dengzi</vendor>
+    <description>Generate findViewById code automatic in android, support Java and Kotlin</description>
+    <vendor email="denua@foxmail.com" url="https://github.com/MrDenua">dengzi</vendor>
 
     <!--    <change-notes></change-notes>-->
 
     <depends>com.intellij.modules.all</depends>
     <depends>org.jetbrains.kotlin</depends>
-    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Mapping Window"
-                    secondary="true"
-                    canCloseContents="false"
-                    factoryClass="com.dengzii.plugin.findview.ui.MappingWindow"
-                    anchor="bottom"/>
-    </extensions>
 
     <actions>
-
-        <action id="com.dengzii.plugin.findview.main" class="com.dengzii.plugin.findview.TestMainAction"
-                text="Generate FindViewById"
-                description="Generate findViewById action" keymap="$default">
-
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
-            <keyboard-shortcut first-keystroke="alt G" keymap="$default"/>
-        </action>
-        <action id="com.dengzii.plugn.findview.action1" class="com.dengzii.plugin.findview.MainAction"
-                text="Generate Find View" description="Generate Find View">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="alt F"/>
+        <action id="com.dengzii.plugn.findview.action" class="com.dengzii.plugin.findview.MainAction"
+                text="Generate FindViewById" description="Generate findViewById">
+            <add-to-group group-id="GenerateGroup" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
         </action>
     </actions>
 

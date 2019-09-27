@@ -1,11 +1,19 @@
 package com.dengzii.plugin.findview.gen;
 
 import com.dengzii.plugin.findview.ViewInfo;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 
 import java.util.List;
 
+/**
+ * <pre>
+ * author : dengzi
+ * e-mail : denua@foxmail.com
+ * github : https://github.com/MrDenua
+ * time   : 2019/9/27
+ * desc   :
+ * </pre>
+ */
 public abstract class BaseCase {
 
     private BaseCase next;

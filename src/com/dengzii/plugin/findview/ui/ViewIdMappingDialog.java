@@ -9,9 +9,20 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.BorderUIResource;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 
+/**
+ * <pre>
+ * author : dengzi
+ * e-mail : denua@foxmail.com
+ * github : https://github.com/MrDenua
+ * time   : 2019/9/27
+ * desc   :
+ * </pre>
+ */
 public class ViewIdMappingDialog extends DialogWrapper {
 
     private static final int NAMED_BY_ID = 467;
@@ -161,6 +172,7 @@ public class ViewIdMappingDialog extends DialogWrapper {
 
     private JBLabel getTitleLabel(String title) {
         JBLabel label = new JBLabel(title);
+        label.setToolTipText(title);
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setPreferredSize(new Dimension(MAPPING_COL_WIDTH, MAPPING_ROW_HEIGHT));
         return label;
@@ -168,14 +180,16 @@ public class ViewIdMappingDialog extends DialogWrapper {
 
     private JBLabel getLabel(String title) {
         JBLabel label = new JBLabel(title);
+        label.setToolTipText(title);
         label.setPreferredSize(new Dimension(MAPPING_COL_WIDTH, MAPPING_ROW_HEIGHT));
         return label;
     }
 
     private JBTextField getMappingTextField(ViewInfo viewInfo) {
         JBTextField jbTextField = new JBTextField(viewInfo.getMappingField());
+        jbTextField.setToolTipText(viewInfo.getMappingField());
         jbTextField.setPreferredSize(new Dimension(MAPPING_COL_WIDTH, MAPPING_ROW_HEIGHT));
-        jbTextField.setBorder(new BorderUIResource.EmptyBorderUIResource(1,1,1,1));
+        jbTextField.setBorder(new BorderUIResource.EmptyBorderUIResource(1, 1, 1, 1));
         jbTextField.setHorizontalAlignment(SwingConstants.LEFT);
         mFieldName.add(jbTextField);
         return jbTextField;
