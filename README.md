@@ -8,7 +8,7 @@
 
 ## Install
 
-  Navigation -> File -> Settings -> Plugins -> On the top side, click 'gear' icon -> install plugin form disk -> choose the jar you donwload
+  Navigation -> File -> Settings -> Plugins -> On the top side, click 'gear' icon -> install plugin form disk -> choose the jar you download
 
 ## Usage
 
