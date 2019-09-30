@@ -6,6 +6,10 @@
 
 **Support both of Java and Kotlin code generate.**
 
+## Install
+
+  Navigation -> File -> Settings -> Plugins -> On the top side, click 'gear' icon -> install plugin form disk -> choose the jar you donwload
+
 ## Usage
 
 - Press 'Alt + Insert', in generate popup window, the first item is 'Generate FindViewById' 
