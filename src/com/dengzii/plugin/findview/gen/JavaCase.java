@@ -1,7 +1,8 @@
 package com.dengzii.plugin.findview.gen;
 
+import com.dengzii.plugin.findview.Config;
 import com.dengzii.plugin.findview.ViewInfo;
-import com.intellij.lang.Language;
+import com.dengzii.plugin.findview.utils.PsiClassUtils;
 import com.intellij.psi.*;
 
 import java.util.List;
@@ -18,26 +19,27 @@ import java.util.Objects;
  */
 public class JavaCase extends BaseCase {
 
-    private static final Language JAVA = Language.findLanguageByID("JAVA");
 
     private static final String STATEMENT_FIELD = "private %s %s;";
-    private static final String METHOD_INIT_VIEW = "initView";
     private static final String STATEMENT_FIND_VIEW = "%s = findViewById(R.id.%s);\n";
+
+//    private static final InsertPlace mFieldInsertPlace = InsertPlace.FIRST; // TODO: 2019/9/30 add insert place support
+//    private static final InsertPlace mFindViewInsertPlace = InsertPlace.FIRST; // TODO: 2019/9/30
 
     @Override
     void dispose(PsiFile psiElement, List<ViewInfo> viewInfos) {
 
-        if (!psiElement.getLanguage().is(JAVA)) {
+        if (!psiElement.getLanguage().is(Config.JAVA)) {
             next(psiElement, viewInfos);
             return;
         }
 
-        PsiElementFactory factory = PsiElementFactory.getInstance(psiElement.getProject());
+        PsiElementFactory factory = JavaPsiFacade.getElementFactory(psiElement.getProject());
         PsiClass psiClass = getPsiClass(psiElement);
         if (Objects.isNull(psiClass)) {
             return;
         }
-        PsiMethod initViewMethod = genInitViewMethod(factory);
+        PsiMethod initViewMethod = genInitViewMethod(factory, psiClass);
 
         for (ViewInfo viewInfo : viewInfos) {
             if (!viewInfo.isGenerate()) continue;
@@ -46,8 +48,6 @@ public class JavaCase extends BaseCase {
                 initViewMethod.getBody().add(genFindViewStatement(factory, viewInfo));
             }
         }
-
-        psiClass.add(initViewMethod);
     }
 
     private PsiClass getPsiClass(PsiFile file) {
@@ -66,9 +66,13 @@ public class JavaCase extends BaseCase {
         return factory.createFieldFromText(statement, null);
     }
 
-    private PsiMethod genInitViewMethod(PsiElementFactory factory) {
+    private PsiMethod genInitViewMethod(PsiElementFactory factory, PsiClass psiClass) {
 
-        PsiMethod method1 = factory.createMethod(METHOD_INIT_VIEW, PsiType.VOID);
+        PsiMethod method1 = PsiClassUtils.getMethod(psiClass, Config.METHOD_INIT_VIEW);
+        if (Objects.isNull(method1)) {
+            method1 = factory.createMethod(Config.METHOD_INIT_VIEW, PsiType.VOID);
+            psiClass.add(method1);
+        }
         method1.getModifierList().setModifierProperty(PsiModifier.PRIVATE, true);
         return method1;
     }
