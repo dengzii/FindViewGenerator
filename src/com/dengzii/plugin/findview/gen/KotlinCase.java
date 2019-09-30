@@ -1,8 +1,8 @@
 package com.dengzii.plugin.findview.gen;
 
+import com.dengzii.plugin.findview.Config;
 import com.dengzii.plugin.findview.ViewInfo;
 import com.dengzii.plugin.findview.utils.KtPsiUtils;
-import com.intellij.lang.Language;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.kotlin.psi.*;
@@ -22,11 +22,9 @@ import java.util.Objects;
 @SuppressWarnings({"ConstantConditions", "FieldCanBeLocal"})
 public class KotlinCase extends BaseCase {
 
-    private static final Language KOTLIN = Language.findLanguageByID("kotlin");
-    private static String STATEMENT_LAZY_INIT_VIEW = " %s val %s by lazy  { findViewById<%s>(R.id.%s) }";
+    private static String STATEMENT_LAZY_INIT_VIEW = " %s val %s by lazy  { findViwById<%s>(R.id.%s) }";
     private static String FUN_INIT_VIEW = "private fun %s() {\n\n}";
     private static String MODIFIER_INIT_VIEW_PROPERTY = "private";
-    private static String NAME_INIT_VIEW_FUN = "initView";
     private static boolean INIT_VIEW_BY_LAZY = true;
 
     private InsertPlace mFieldPlace = InsertPlace.FIRST;
@@ -35,7 +33,7 @@ public class KotlinCase extends BaseCase {
     @Override
     void dispose(PsiFile psiElement, List<ViewInfo> viewInfos) {
 
-        if (!psiElement.getLanguage().is(KOTLIN)) {
+        if (!psiElement.getLanguage().is(Config.KOTLIN)) {
             next(psiElement, viewInfos);
             return;
         }
@@ -75,7 +73,7 @@ public class KotlinCase extends BaseCase {
         PsiElement firstFun = KtPsiUtils.getFirstFun(ktClass);
         KtClassBody ktClassBody = ktClass.getBody();
         PsiElement rBrace = ktClassBody.getRBrace();
-        KtFunction initViewFun = factory.createFunction(String.format(FUN_INIT_VIEW, NAME_INIT_VIEW_FUN));
+        KtFunction initViewFun = factory.createFunction(String.format(FUN_INIT_VIEW, Config.METHOD_INIT_VIEW));
 
         ktClassBody.addBefore(initViewFun, Objects.isNull(firstFun) ? rBrace : firstFun);
     }

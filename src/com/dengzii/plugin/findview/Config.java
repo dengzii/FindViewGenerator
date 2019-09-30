@@ -1,6 +1,6 @@
 package com.dengzii.plugin.findview;
 
-import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.lang.Language;
 
 /**
  * <pre>
@@ -11,10 +11,12 @@ import com.intellij.ide.util.PropertiesComponent;
  * desc   :
  * </pre>
  */
+@SuppressWarnings("WeakerAccess")
 public class Config {
 
+    public static final Language JAVA = Language.findLanguageByID("JAVA");
+    public static final Language KOTLIN = Language.findLanguageByID("kotlin");
+    public static String METHOD_INIT_VIEW = "initView";
     public static String FIELD_NAME_PREFIX = "m";
-
-
 
 }

@@ -11,8 +11,6 @@ package com.dengzii.plugin.findview;
  */
 public class ViewInfo {
 
-    private static final String NAMED_PREFIX = "m";
-
     private String type;
     private String id;
     private String layout;
@@ -29,7 +27,7 @@ public class ViewInfo {
 
     public void genMappingField() {
 
-        StringBuilder builder = new StringBuilder(NAMED_PREFIX);
+        StringBuilder builder = new StringBuilder(Config.FIELD_NAME_PREFIX);
         if (id.contains("_")) {
             String[] split = id.toLowerCase().split("_");
             for (String s : split) {
