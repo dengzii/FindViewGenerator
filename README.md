@@ -8,7 +8,13 @@
 
 ## Install
 
-  Navigation -> File -> Settings -> Plugins -> On the top side, click 'gear' icon -> install plugin form disk -> choose the jar you download
+- install from release jar
+
+  - Navigation -> File -> Settings -> Plugins -> On the top side, click 'gear' icon -> install plugin form disk -> choose the jar you download
+
+- install from IntelliJ Plugin Repository
+
+   - Navigation -> File -> Settings -> Plugins -> search 'Generate FindViewById'
 
 ## Usage
 
