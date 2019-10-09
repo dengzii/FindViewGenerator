@@ -6,6 +6,16 @@
 
 **Support both of Java and Kotlin code generate.**
 
+## Install
+
+- install from release jar
+
+  - Navigation -> File -> Settings -> Plugins -> On the top side, click 'gear' icon -> install plugin form disk -> choose the jar you download
+
+- install from IntelliJ Plugin Repository
+
+   - Navigation -> File -> Settings -> Plugins -> search 'Generate FindViewById'
+
 ## Usage
 
 - Press 'Alt + Insert', in generate popup window, the first item is 'Generate FindViewById' 
