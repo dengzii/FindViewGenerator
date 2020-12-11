@@ -1,10 +1,10 @@
 # FindViewGenerator
 
-> Free your hands, make code easy.
+> Free your hands, make coding easy.
 
-**A AndroidStudio plugin use for generate findViewById code automatic.**
+**An AndroidStudio plugin use for generate findViewById code automatic.**
 
-**Support both of Java and Kotlin code generate.**
+**Support both of Java and Kotlin code generation.**
 
 ## Install
 
@@ -21,6 +21,11 @@
 - Press 'Alt + Insert', in generate popup window, the first item is 'Generate FindViewById' 
 
 - Press 'Ctrl + Alt + 1'
+
+## Build 
+
+Kotlin dependency `<depends>org.jetbrains.kotlin</depends>` must import kotlin plugin jars as project dependency first, 
+import dependency from `Project Structure > Module > Dependencies`, choose kotlin plugin your IDEA installation path > plugin > kotlin > lib. 
 
 ## Screenshots
 
