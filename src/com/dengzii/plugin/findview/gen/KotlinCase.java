@@ -22,7 +22,7 @@ import java.util.Objects;
 @SuppressWarnings({"ConstantConditions", "FieldCanBeLocal"})
 public class KotlinCase extends BaseCase {
 
-    private static String STATEMENT_LAZY_INIT_VIEW = " %s val %s by lazy  { findViwById<%s>(R.id.%s) }";
+    private static String STATEMENT_LAZY_INIT_VIEW = " %s val %s by lazy  { findViewById<%s>(R.id.%s) }";
     private static String FUN_INIT_VIEW = "private fun %s() {\n\n}";
     private static String MODIFIER_INIT_VIEW_PROPERTY = "private";
     private static boolean INIT_VIEW_BY_LAZY = true;
