@@ -13,8 +13,8 @@ import java.util.Objects;
 /**
  * <pre>
  * author : dengzi
- * e-mail : denua@foxmail.com
- * github : https://github.com/MrDenua
+ * e-mail : dengzii@foxmail.com
+ * github : <a href="https://github.com/dengzii">...</a>
  * time   : 2019/9/27
  * desc   :
  * </pre>
@@ -22,13 +22,13 @@ import java.util.Objects;
 @SuppressWarnings({"ConstantConditions", "FieldCanBeLocal"})
 public class KotlinCase extends BaseCase {
 
-    private static String STATEMENT_LAZY_INIT_VIEW = " %s val %s by lazy  { findViewById<%s>(R.id.%s) }";
-    private static String FUN_INIT_VIEW = "private fun %s() {\n\n}";
-    private static String MODIFIER_INIT_VIEW_PROPERTY = "private";
-    private static boolean INIT_VIEW_BY_LAZY = true;
+    private static final String STATEMENT_LAZY_INIT_VIEW = " %s val %s by lazy  { findViewById<%s>(R.id.%s) }";
+    private static final String FUN_INIT_VIEW = "private fun %s() {\n\n}";
+    private static final String MODIFIER_INIT_VIEW_PROPERTY = "private";
+    private static final boolean INIT_VIEW_BY_LAZY = true;
 
-    private InsertPlace mFieldPlace = InsertPlace.FIRST;
-    private InsertPlace mMethodPlace = InsertPlace.FIRST;
+    private final InsertPlace mFieldPlace = InsertPlace.FIRST;
+    private final InsertPlace mMethodPlace = InsertPlace.FIRST;
 
     @Override
     void dispose(PsiFile psiElement, List<ViewInfo> viewInfos) {

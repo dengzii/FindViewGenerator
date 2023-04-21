@@ -5,8 +5,8 @@ import com.intellij.lang.Language;
 /**
  * <pre>
  * author : dengzi
- * e-mail : denua@foxmail.com
- * github : https://github.com/MrDenua
+ * e-mail : dengzii@foxmail.com
+ * github : <a href="https://github.com/dengzii">...</a>
  * time   : 2019/9/27
  * desc   :
  * </pre>

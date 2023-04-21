@@ -1,4 +1,4 @@
-<idea-plugin url="https://github.com/MrDenua/FindViewGenerator">
+<idea-plugin url="https://github.com/dengzii/FindViewGenerator">
 
     <name>Generate FindViewById</name>
     <id>com.dengzii.plugin.findview</id>
@@ -6,7 +6,7 @@
     <idea-version since-build="183.4284.148"/>
 
     <description>Generate findViewById code automatic in android, support Java and Kotlin</description>
-    <vendor email="denua@foxmail.com" url="https://github.com/MrDenua">dengzi</vendor>
+    <vendor email="dengzii@foxmail.com" url="https://github.com/dengzii">dengzi</vendor>
 
     <!--    <change-notes></change-notes>-->
 
