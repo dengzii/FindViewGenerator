@@ -1,81 +1,66 @@
-package com.dengzii.plugin.findview;
+package com.dengzii.plugin.findview
 
-import com.dengzii.plugin.findview.gen.FindViewCodeWriter;
-import com.dengzii.plugin.findview.ui.ViewIdMappingDialog;
-import com.dengzii.plugin.findview.utils.PsiFileUtils;
-import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+import com.dengzii.plugin.findview.gen.FindViewCodeWriter
+import com.dengzii.plugin.findview.tools.ui.showAtCenterScreen
+import com.dengzii.plugin.findview.ui.XGenDialog
+import com.dengzii.plugin.findview.utils.PsiFileUtils
+import com.intellij.openapi.actionSystem.ActionUpdateThread
+import com.intellij.openapi.actionSystem.AnAction
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.command.WriteCommandAction
 
 /**
  * <pre>
  * author : dengzi
  * e-mail : dengzii@foxmail.com
- * github : <a href="https://github.com/dengzii">...</a>
+ * github : [...](https://github.com/dengzii)
  * time   : 2019/9/27
  * desc   :
- * </pre>
+</pre> *
  */
-public class MainAction extends AnAction {
-
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-
-        Project project = e.getProject();
-        PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
-
-        if (isNull(project, psiFile, editor)) {
-            return;
+class MainAction : AnAction() {
+    override fun actionPerformed(e: AnActionEvent) {
+        val project = e.project
+        val psiFile = e.getData(CommonDataKeys.PSI_FILE)
+        val editor = e.getData(CommonDataKeys.EDITOR)
+        if (isNull(project!!, psiFile!!, editor!!)) {
+            return
         }
-
-        ViewIdMappingDialog viewIdMappingDialog = new ViewIdMappingDialog(project,
-                PsiFileUtils.getViewInfoFromPsiFile(psiFile, project));
-
-        if (viewIdMappingDialog.showAndGet()) {
-            List<ViewInfo> viewInfos = viewIdMappingDialog.getResult();
-            if (viewInfos.isEmpty()) {
-                return;
+        XGenDialog(PsiFileUtils.getViewInfoFromPsiFile(psiFile, project)) {
+            it.forEach { v ->
+                println(v.toString())
             }
-            WriteCommandAction.writeCommandAction(project).run(new FindViewCodeWriter(psiFile, viewInfos));
-        }
+//            WriteCommandAction.writeCommandAction(project).run(FindViewCodeWriter(psiFile, it))
+        }.showAtCenterScreen()
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @Override
-    public void update(@NotNull AnActionEvent e) {
-        super.update(e);
-        Project project = e.getProject();
-        PsiFile psiFile = e.getData(CommonDataKeys.PSI_FILE);
-        Editor editor = e.getData(CommonDataKeys.EDITOR);
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
+    }
 
-        e.getPresentation().setEnabledAndVisible(true);
-
+    override fun update(e: AnActionEvent) {
+        super.update(e)
+        val project = e.project
+        val psiFile = e.getData(CommonDataKeys.PSI_FILE)
+        val editor = e.getData(CommonDataKeys.EDITOR)
+        e.presentation.isEnabledAndVisible = true
         if (isNull(project, psiFile, editor)) {
-            e.getPresentation().setEnabledAndVisible(false);
-            return;
+            e.presentation.isEnabledAndVisible = false
+            return
         }
-        Language language = psiFile.getLanguage();
-        if (!language.is(Config.JAVA) && !language.is(Config.KOTLIN)) {
-            e.getPresentation().setEnabledAndVisible(false);
+        val language = psiFile!!.language
+        if (language != Config.JAVA && language != Config.KOTLIN) {
+            e.presentation.isEnabledAndVisible = false
         }
-
     }
 
-    private boolean isNull(Object... objects) {
-        for (Object o : objects) {
+    private fun isNull(vararg objects: Any?): Boolean {
+        for (o in objects) {
             if (o == null) {
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 }

@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.7.20"
+    id("org.jetbrains.kotlin.jvm") version "1.8.0"
     id("org.jetbrains.intellij") version "1.13.1"
 }
 
@@ -14,7 +14,10 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2.4")
+
+//    version.set("2022.2.4")
+    localPath.set("D:\\IntelliJ IDEA Community Edition 2023.1")
+
     type.set("IC") // Target IDE Platform
 
     pluginName.set("FindViewById")

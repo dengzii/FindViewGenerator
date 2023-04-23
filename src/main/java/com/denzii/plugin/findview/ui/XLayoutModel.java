@@ -1,4 +1,4 @@
-package com.dengzii.plugin.findview.ui;
+package com.denzii.plugin.findview.ui;
 
 import javax.swing.*;
 import java.util.ArrayList;

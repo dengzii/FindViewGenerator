@@ -1,38 +1,28 @@
-package com.dengzii.plugin.findview.utils;
+package com.dengzii.plugin.findview.utils
 
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.psi.KtClass;
-import org.jetbrains.kotlin.psi.KtFunction;
+import org.jetbrains.kotlin.psi.KtClass
+import org.jetbrains.kotlin.psi.KtFunction
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-public class KtPsiUtils {
-
-    @Nullable
-    public static KtFunction getFirstFun(KtClass ktClass) {
-        List<KtFunction> functions = getFunList(ktClass);
-        if (functions.size() > 0) {
-            return functions.get(0);
-        }
-        return null;
+object KtPsiUtils {
+    fun getFirstFun(ktClass: KtClass): KtFunction? {
+        val functions = getFunList(ktClass)
+        return if (functions.isNotEmpty()) {
+            functions[0]
+        } else null
     }
 
-    public static List<KtFunction> getFunList(KtClass ktClass) {
-
-        List<KtFunction> result = new ArrayList<>();
-
-        if (Objects.isNull(ktClass.getBody())) {
-            return result;
+    private fun getFunList(ktClass: KtClass): List<KtFunction> {
+        val result: MutableList<KtFunction> = ArrayList()
+        if (Objects.isNull(ktClass.body)) {
+            return result
         }
-        PsiElement[] elements = ktClass.getBody().getChildren();
-        for (PsiElement element : elements) {
-            if (element instanceof KtFunction) {
-                result.add(((KtFunction) element));
+        val elements = ktClass.body!!.children
+        for (element in elements) {
+            if (element is KtFunction) {
+                result.add(element)
             }
         }
-        return result;
+        return result
     }
 }

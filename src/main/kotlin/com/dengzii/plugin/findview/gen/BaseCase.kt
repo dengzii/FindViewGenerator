@@ -1,36 +1,31 @@
-package com.dengzii.plugin.findview.gen;
+package com.dengzii.plugin.findview.gen
 
-import com.dengzii.plugin.findview.ViewInfo;
-import com.intellij.psi.PsiFile;
-
-import java.util.List;
+import com.dengzii.plugin.findview.ViewInfo
+import com.intellij.psi.PsiFile
 
 /**
  * <pre>
  * author : dengzi
  * e-mail : dengzii@foxmail.com
- * github : <a href="https://github.com/dengzii">...</a>
+ * github : [...](https://github.com/dengzii)
  * time   : 2019/9/27
  * desc   :
- * </pre>
+</pre> *
  */
-public abstract class BaseCase {
-
-    private BaseCase next;
-
-    abstract void dispose(PsiFile psiElement, List<ViewInfo> viewInfos);
-
-    final void setNext(BaseCase next) {
-        this.next = next;
+abstract class BaseCase {
+    private var next: BaseCase? = null
+    abstract fun dispose(psiElement: PsiFile, viewInfos: List<ViewInfo>)
+    fun setNext(next: BaseCase?) {
+        this.next = next
     }
 
-    protected BaseCase next() {
-        return next;
+    protected operator fun next(): BaseCase? {
+        return next
     }
 
-    protected void next(PsiFile psiElement, List<ViewInfo> viewInfos) {
+    protected fun next(psiElement: PsiFile, viewInfos: List<ViewInfo>) {
         if (next != null) {
-            next.dispose(psiElement, viewInfos);
+            next!!.dispose(psiElement, viewInfos)
         }
     }
 }

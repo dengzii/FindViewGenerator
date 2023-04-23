@@ -1,37 +1,23 @@
-package com.dengzii.plugin.findview.gen;
+package com.dengzii.plugin.findview.gen
 
-import com.dengzii.plugin.findview.ViewInfo;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.ThrowableRunnable;
-
-import java.util.List;
+import com.dengzii.plugin.findview.ViewInfo
+import com.intellij.psi.PsiFile
+import com.intellij.util.ThrowableRunnable
 
 /**
  * <pre>
  * author : dengzi
  * e-mail : dengzii@foxmail.com
- * github : <a href="https://github.com/dengzii">...</a>
+ * github : [...](https://github.com/dengzii)
  * time   : 2019/9/27
  * desc   :
- * </pre>
+</pre> *
  */
-public class FindViewCodeWriter implements ThrowableRunnable<RuntimeException> {
-
-
-    private PsiFile psiFile;
-    private List<ViewInfo> viewInfos;
-
-    public FindViewCodeWriter(PsiFile psiFile, List<ViewInfo> viewInfos) {
-        this.psiFile = psiFile;
-        this.viewInfos = viewInfos;
-    }
-
-    @Override
-    public void run() throws RuntimeException {
-
-        JavaCase javaCase = new JavaCase();
-        javaCase.setNext(new KotlinCase());
-        javaCase.dispose(psiFile, viewInfos);
+class FindViewCodeWriter(private val psiFile: PsiFile, private val viewInfos: List<ViewInfo>) : ThrowableRunnable<RuntimeException?> {
+    @Throws(RuntimeException::class)
+    override fun run() {
+        val javaCase = JavaCase()
+        javaCase.setNext(KotlinCase())
+        javaCase.dispose(psiFile, viewInfos)
     }
 }

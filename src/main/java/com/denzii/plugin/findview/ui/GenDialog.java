@@ -1,23 +1,20 @@
-package com.dengzii.plugin.findview.ui;
+package com.denzii.plugin.findview.ui;
 
-import com.dengzii.plugin.findview.tools.ui.XDialog;
+import com.intellij.openapi.ui.ComboBox;
+import com.intellij.ui.table.JBTable;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class GenDialog extends JDialog {
-    JPanel contentPane;
-    JButton buttonOK;
-    JButton buttonCancel;
-    JTable tableFieldMapping;
-    JComboBox<String> comboBoxLayoutRes;
-    JRadioButton startRadioButton;
-    JRadioButton endRadioButton;
-    JRadioButton cursorRadioButton;
-    JRadioButton mCamelCaseRadioButton;
-    JRadioButton camelCaseRadioButton;
-    JRadioButton under_lineRadioButton;
+    public JPanel contentPane;
+    public JButton buttonOK;
+    public JButton buttonCancel;
+    public JBTable tableFieldMapping;
+    public JComboBox<String> comboBoxLayoutRes;
+    private ComboBox cbInsertAt;
+    private ComboBox cbNaming;
 
     public GenDialog() {
         setContentPane(contentPane);

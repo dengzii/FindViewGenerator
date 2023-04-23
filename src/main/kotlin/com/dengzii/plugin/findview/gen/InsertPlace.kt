@@ -1,14 +1,15 @@
-package com.dengzii.plugin.findview.gen;
+package com.dengzii.plugin.findview.gen
 
 /**
  * <pre>
  * author : dengzi
  * e-mail : dengzii@foxmail.com
- * github : <a href="https://github.com/dengzii">...</a>
+ * github : [...](https://github.com/dengzii)
  * time   : 2019/9/27
  * desc   :
- * </pre>
+</pre> *
  */
-public enum InsertPlace {
-    FIRST, LAST
+enum class InsertPlace {
+    FIRST,
+    LAST
 }

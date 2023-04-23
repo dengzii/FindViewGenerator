@@ -1,30 +1,29 @@
-package com.dengzii.plugin.findview.utils;
+package com.dengzii.plugin.findview.utils
 
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiMethod
 
 /**
  * <pre>
  * author : dengzi
  * e-mail : dengzii@foxmail.com
- * github : <a href="https://github.com/dengzii">...</a>
+ * github : [...](https://github.com/dengzii)
  * time   : 2019/9/30
  * desc   :
- * </pre>
+</pre> *
  */
-public class PsiClassUtils {
-
-    public static PsiMethod getMethod(PsiClass psiClass, String methodName) {
-        PsiMethod[] methods = getMethods(psiClass);
-        for (PsiMethod method : methods) {
-            if (method.getName().equals(methodName)) {
-                return method;
+object PsiClassUtils {
+    fun getMethod(psiClass: PsiClass, methodName: String): PsiMethod? {
+        val methods = getMethods(psiClass)
+        for (method in methods) {
+            if (method.name == methodName) {
+                return method
             }
         }
-        return null;
+        return null
     }
 
-    public static PsiMethod[] getMethods(PsiClass psiClass) {
-        return psiClass.getMethods();
+    private fun getMethods(psiClass: PsiClass): Array<PsiMethod> {
+        return psiClass.methods
     }
 }
