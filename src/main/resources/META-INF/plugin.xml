@@ -1,0 +1,24 @@
+<idea-plugin url="https://github.com/dengzii/FindViewGenerator">
+
+  <name>Generate FindViewById</name>
+  <id>com.dengzii.plugin.findview</id>
+  <version>1.1</version>
+  <idea-version since-build="183.4284.148"/>
+
+  <description>Generate findViewById code automatic in android, support Java and Kotlin</description>
+  <vendor email="dengzii@foxmail.com" url="https://github.com/dengzii">dengzi</vendor>
+
+  <!--    <change-notes></change-notes>-->
+
+<!--  <depends>com.intellij.modules.java</depends>-->
+  <depends>org.jetbrains.kotlin</depends>
+
+  <actions>
+    <action id="com.dengzii.plugn.findview.action" class="com.dengzii.plugin.findview.MainAction"
+            text="Generate FindViewById" description="Generate findViewById">
+      <add-to-group group-id="GenerateGroup" anchor="first"/>
+      <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
+    </action>
+  </actions>
+
+</idea-plugin>
