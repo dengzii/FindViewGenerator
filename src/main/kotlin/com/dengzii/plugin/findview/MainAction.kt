@@ -1,6 +1,7 @@
 package com.dengzii.plugin.findview
 
 import com.dengzii.plugin.findview.gen.FindViewCodeWriter
+import com.dengzii.plugin.findview.gen.GenConfig
 import com.dengzii.plugin.findview.tools.ui.showAtCenterScreen
 import com.dengzii.plugin.findview.ui.XGenDialog
 import com.dengzii.plugin.findview.utils.PsiFileUtils
@@ -27,11 +28,13 @@ class MainAction : AnAction() {
         if (isNull(project!!, psiFile!!, editor!!)) {
             return
         }
-        XGenDialog(PsiFileUtils.getViewInfoFromPsiFile(psiFile, project)) {
-            it.forEach { v ->
-                println(v.toString())
+        val vis = PsiFileUtils.getViewInfoFromPsiFile(psiFile, project)
+        val conf = GenConfig(emptyList(), psiFile, editor)
+        XGenDialog(conf, vis) {
+            if (it.viewInfo.isEmpty()) {
+                return@XGenDialog
             }
-//            WriteCommandAction.writeCommandAction(project).run(FindViewCodeWriter(psiFile, it))
+            WriteCommandAction.writeCommandAction(project).run(FindViewCodeWriter(it))
         }.showAtCenterScreen()
     }
 

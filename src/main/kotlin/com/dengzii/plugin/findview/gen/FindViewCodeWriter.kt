@@ -1,7 +1,5 @@
 package com.dengzii.plugin.findview.gen
 
-import com.dengzii.plugin.findview.ViewInfo
-import com.intellij.psi.PsiFile
 import com.intellij.util.ThrowableRunnable
 
 /**
@@ -13,11 +11,11 @@ import com.intellij.util.ThrowableRunnable
  * desc   :
 </pre> *
  */
-class FindViewCodeWriter(private val psiFile: PsiFile, private val viewInfos: List<ViewInfo>) : ThrowableRunnable<RuntimeException?> {
+class FindViewCodeWriter(private val genConfig: GenConfig) : ThrowableRunnable<RuntimeException?> {
     @Throws(RuntimeException::class)
     override fun run() {
         val javaCase = JavaCase()
         javaCase.setNext(KotlinCase())
-        javaCase.dispose(psiFile, viewInfos)
+        javaCase.dispose(genConfig)
     }
 }

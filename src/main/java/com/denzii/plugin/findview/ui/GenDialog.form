@@ -114,10 +114,12 @@
           <component id="7ad9c" class="com.intellij.openapi.ui.ComboBox" binding="cbInsertAt">
             <constraints/>
             <properties>
+              <enabled value="true"/>
               <model>
                 <item value="Start"/>
                 <item value="Cursor"/>
               </model>
+              <swingPopup value="true"/>
             </properties>
           </component>
           <component id="910df" class="javax.swing.JLabel">
@@ -129,11 +131,19 @@
           <component id="c904b" class="com.intellij.openapi.ui.ComboBox" binding="cbNaming">
             <constraints/>
             <properties>
+              <enabled value="false"/>
               <model>
                 <item value="mCamelCase"/>
                 <item value="camelCase"/>
                 <item value="under_line"/>
               </model>
+            </properties>
+          </component>
+          <component id="be720" class="javax.swing.JCheckBox" binding="autoImportCheckBox" default-binding="true">
+            <constraints/>
+            <properties>
+              <selected value="true"/>
+              <text value="Auto Import"/>
             </properties>
           </component>
         </children>

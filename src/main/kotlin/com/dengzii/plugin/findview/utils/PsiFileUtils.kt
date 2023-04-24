@@ -57,6 +57,7 @@ object PsiFileUtils {
                     val type = if (element.name.contains(".")) element.name.substring(element.name.lastIndexOf(".") + 1) else element.name
                     if (id != null) {
                         val viewInfo = ViewInfo(type, id)
+                        viewInfo.fullType = element.name
                         viewInfo.genMappingField()
                         result.add(viewInfo)
                     }

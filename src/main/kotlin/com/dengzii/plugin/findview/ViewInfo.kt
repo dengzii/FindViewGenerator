@@ -13,23 +13,24 @@ import java.util.*
  */
 class ViewInfo(val type: String, val id: String, var field: String = "", var enable: Boolean = true) {
 
+    var fullType = ""
     var typePkg = ""
 
     fun genMappingField() {
-        val builder = StringBuilder(Config.FIELD_NAME_PREFIX)
-        if (id.contains("_")) {
-            val split = id.lowercase(Locale.getDefault()).split("_".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            for (s in split) {
-                if (s.isNotEmpty()) {
-                    val c = s.substring(0, 1).uppercase(Locale.getDefault())
-                    builder.append(c).append(s.substring(1))
-                }
+        idToCamelCaseField()
+    }
+
+    private fun idToCamelCaseField(prefix: String = "m") {
+        val sb = StringBuilder(prefix)
+        val split = id.split("_")
+        split.forEachIndexed { index, s ->
+            if (index == 0 && prefix.isEmpty()) {
+                sb.append(s)
+            } else {
+                sb.append(s.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
             }
-        } else {
-            val c = id.substring(0, 1).uppercase(Locale.getDefault())
-            builder.append(c).append(id.substring(1))
         }
-        field = builder.toString()
+        field = sb.toString()
     }
 
     override fun toString(): String {

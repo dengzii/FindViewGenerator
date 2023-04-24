@@ -1,6 +1,8 @@
 package com.dengzii.plugin.findview.ui
 
 import com.dengzii.plugin.findview.ViewInfo
+import com.dengzii.plugin.findview.gen.GenConfig
+import com.dengzii.plugin.findview.gen.InsertPlace
 import com.dengzii.plugin.findview.tools.ui.ColumnInfo
 import com.dengzii.plugin.findview.tools.ui.TableAdapter
 import com.denzii.plugin.findview.ui.GenDialog
@@ -18,14 +20,16 @@ import javax.swing.DefaultComboBoxModel
  * </pre>
  */
 class XGenDialog(
-        private val layoutFileIndex: Map<String, List<ViewInfo>>,
-        private val callback: (vis: List<ViewInfo>) -> Unit
+    private val conf: GenConfig,
+    private val layoutFileIndex: Map<String, List<ViewInfo>>,
+    private val callback: (genConfig: GenConfig) -> Unit
 ) : GenDialog() {
 
     private val cols = mutableListOf(
-            ColumnInfo("ID"), ColumnInfo("View Class"), FieldNameCol(), EnableCol()
+        ColumnInfo("ID"), ColumnInfo("View Class"), FieldNameCol(), EnableCol()
     )
 
+    private val viewInfoList = mutableListOf<ViewInfo>()
     private val tableData = mutableListOf<MutableList<Any?>>()
 
     private val adapter = TableAdapter(tableData, cols as MutableList<ColumnInfo<Any>>)
@@ -39,7 +43,8 @@ class XGenDialog(
         tableFieldMapping.showHorizontalLines = true
         tableFieldMapping.showVerticalLines = true
 
-        layoutFileIndex.values.first().forEach {
+        viewInfoList.addAll(layoutFileIndex.values.first())
+        viewInfoList.forEach {
             tableData.add(mutableListOf(it.id, it.type, it.field, it.enable))
         }
     }
@@ -61,10 +66,14 @@ class XGenDialog(
 
         tableFieldMapping.putClientProperty("terminateEditOnFocusLost", true)
 
+        cbInsertAt.model = DefaultComboBoxModel(InsertPlace.values().map { it.desc }.toTypedArray())
+
         comboBoxLayoutRes.model = DefaultComboBoxModel(layoutFileIndex.keys.toTypedArray())
         comboBoxLayoutRes.addItemListener {
             tableData.clear()
+            viewInfoList.clear()
             layoutFileIndex[comboBoxLayoutRes.selectedItem]?.forEach {
+                viewInfoList.add(it)
                 tableData.add(mutableListOf(it.id, it.type, it.field, it.enable))
             }
             adapter.fireTableDataChanged()
@@ -82,11 +91,19 @@ class XGenDialog(
             val fieldName = adapter.getValueAt(r, 2) as String
             val enable = adapter.getValueAt(r, 3) as Boolean
 
+            if (!enable) {
+                continue
+            }
+
             val vi = ViewInfo(type, id, fieldName).apply {
-                this.enable = enable
+                this.fullType = viewInfoList[r].fullType
             }
             result.add(vi)
         }
-        callback(result)
+        conf.insertAt = InsertPlace.values()[cbInsertAt.selectedIndex]
+        conf.viewInfo = result
+        conf.autoImport = autoImportCheckBox.isSelected
+
+        callback(conf)
     }
 }

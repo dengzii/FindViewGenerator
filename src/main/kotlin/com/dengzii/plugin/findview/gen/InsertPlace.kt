@@ -9,7 +9,8 @@ package com.dengzii.plugin.findview.gen
  * desc   :
 </pre> *
  */
-enum class InsertPlace {
-    FIRST,
-    LAST
+enum class InsertPlace(val desc: String) {
+    FIRST("First Line Of Filed"),
+    LAST("Last Line Of Field"),
+    Cursor("Cursor Position")
 }

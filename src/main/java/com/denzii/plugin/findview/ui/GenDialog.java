@@ -13,8 +13,9 @@ public class GenDialog extends JDialog {
     public JButton buttonCancel;
     public JBTable tableFieldMapping;
     public JComboBox<String> comboBoxLayoutRes;
-    private ComboBox cbInsertAt;
-    private ComboBox cbNaming;
+    public ComboBox<String> cbInsertAt;
+    public ComboBox<String> cbNaming;
+    public JCheckBox autoImportCheckBox;
 
     public GenDialog() {
         setContentPane(contentPane);

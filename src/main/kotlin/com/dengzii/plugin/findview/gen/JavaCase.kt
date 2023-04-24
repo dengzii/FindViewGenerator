@@ -18,15 +18,15 @@ import java.util.*
 class JavaCase : BaseCase() {
     //    private static final InsertPlace mFieldInsertPlace = InsertPlace.FIRST; // TODO: 2019/9/30 add insert place support
     //    private static final InsertPlace mFindViewInsertPlace = InsertPlace.FIRST; // TODO: 2019/9/30
-    public override fun dispose(psiElement: PsiFile, viewInfos: List<ViewInfo>) {
-        if (!psiElement.language.`is`(Config.JAVA)) {
-            next(psiElement, viewInfos)
+    public override fun dispose(genConfig: GenConfig) {
+        if (!genConfig.psiFile.language.`is`(Config.JAVA)) {
+            next(genConfig)
             return
         }
-        val factory = JavaPsiFacade.getElementFactory(psiElement.project)
-        val psiClass = getPsiClass(psiElement) ?: return
+        val factory = JavaPsiFacade.getElementFactory(genConfig.psiFile.project)
+        val psiClass = getPsiClass(genConfig.psiFile) ?: return
         val initViewMethod = genInitViewMethod(factory, psiClass)
-        for (viewInfo in viewInfos) {
+        for (viewInfo in genConfig.viewInfo) {
             if (!viewInfo.enable) continue
             psiClass.add(genViewDeclareField(factory, viewInfo))
             if (!Objects.isNull(initViewMethod.body)) {

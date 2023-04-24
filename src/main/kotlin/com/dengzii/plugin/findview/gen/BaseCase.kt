@@ -14,7 +14,7 @@ import com.intellij.psi.PsiFile
  */
 abstract class BaseCase {
     private var next: BaseCase? = null
-    abstract fun dispose(psiElement: PsiFile, viewInfos: List<ViewInfo>)
+    abstract fun dispose(genConfig: GenConfig)
     fun setNext(next: BaseCase?) {
         this.next = next
     }
@@ -23,9 +23,9 @@ abstract class BaseCase {
         return next
     }
 
-    protected fun next(psiElement: PsiFile, viewInfos: List<ViewInfo>) {
+    protected fun next(genConfig: GenConfig) {
         if (next != null) {
-            next!!.dispose(psiElement, viewInfos)
+            next!!.dispose(genConfig)
         }
     }
 }
