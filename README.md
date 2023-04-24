@@ -29,6 +29,5 @@ import dependency from `Project Structure > Module > Dependencies`, choose kotli
 
 ## Screenshots
 
-![generate mapping dialog](https://raw.githubusercontent.com/MrDenua/FindViewGenerator/master/screen_shot/generate_dialog.png)
-
+![generate mapping dialog](https://raw.githubusercontent.com/dengzii/FindViewGenerator/v2/screenshot/plugin.png)
 ![generate code](https://raw.githubusercontent.com/MrDenua/FindViewGenerator/master/screen_shot/generated_code.png)

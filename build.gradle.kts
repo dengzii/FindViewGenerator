@@ -24,9 +24,12 @@ intellij {
 
     description = """Generate findViewById code automatic in android, support Java and Kotlin"""
 
-    plugins.set(listOf(
+    plugins.set(
+        listOf(
+            "java",
             "org.jetbrains.kotlin",
-    ))
+        )
+    )
 }
 
 tasks {

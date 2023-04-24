@@ -53,7 +53,7 @@ class JavaCase : BaseCase() {
     private fun genInitViewMethod(factory: PsiElementFactory, psiClass: PsiClass): PsiMethod {
         var method1 = PsiClassUtils.getMethod(psiClass, Config.METHOD_INIT_VIEW)
         if (Objects.isNull(method1)) {
-            method1 = factory.createMethod(Config.METHOD_INIT_VIEW, PsiTypes.voidType())
+            method1 = factory.createMethod(Config.METHOD_INIT_VIEW, PsiType.VOID)
             psiClass.add(method1)
         }
         method1?.modifierList?.setModifierProperty(PsiModifier.PRIVATE, true)
