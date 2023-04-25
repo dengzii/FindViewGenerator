@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.dengzii.plugin"
-version = "2023.4.1"
+version = "2023.4.2"
 
 repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ intellij {
 
     type.set("IC") // Target IDE Platform
 
-    pluginName.set("FindViewById")
+    pluginName.set("Generate FindViewById")
 
     description = """Generate findViewById code automatic in android, support Java and Kotlin"""
 

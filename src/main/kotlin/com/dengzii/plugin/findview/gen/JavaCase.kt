@@ -3,6 +3,7 @@ package com.dengzii.plugin.findview.gen
 import com.dengzii.plugin.findview.Config
 import com.dengzii.plugin.findview.ViewInfo
 import com.dengzii.plugin.findview.utils.PsiClassUtils
+import com.intellij.lang.jvm.types.JvmPrimitiveTypeKind
 import com.intellij.psi.*
 import java.util.*
 
@@ -26,12 +27,11 @@ class JavaCase : BaseCase() {
         val factory = JavaPsiFacade.getElementFactory(genConfig.psiFile.project)
         val psiClass = getPsiClass(genConfig.psiFile) ?: return
         val initViewMethod = genInitViewMethod(factory, psiClass)
+        initViewMethod.body ?: return
         for (viewInfo in genConfig.viewInfo) {
             if (!viewInfo.enable) continue
             psiClass.add(genViewDeclareField(factory, viewInfo))
-            if (!Objects.isNull(initViewMethod.body)) {
-                initViewMethod.body!!.add(genFindViewStatement(factory, viewInfo))
-            }
+            initViewMethod.body!!.add(genFindViewStatement(factory, viewInfo))
         }
     }
 
@@ -61,12 +61,13 @@ class JavaCase : BaseCase() {
     }
 
     private fun genFindViewStatement(factory: PsiElementFactory, viewInfo: ViewInfo): PsiStatement {
-        val findStatement = String.format(STATEMENT_FIND_VIEW, viewInfo.type.trim { it <= ' ' }, viewInfo.id)
+        val findStatement =
+            String.format(STATEMENT_FIND_VIEW, viewInfo.field.trim { it <= ' ' }, viewInfo.type, viewInfo.id)
         return factory.createStatementFromText(findStatement, null)
     }
 
     companion object {
         private const val STATEMENT_FIELD = "private %s %s;"
-        private const val STATEMENT_FIND_VIEW = "%s = findViewById(R.id.%s);\n"
+        private const val STATEMENT_FIND_VIEW = "%s = findViewById<%s>(R.id.%s);\n"
     }
 }
